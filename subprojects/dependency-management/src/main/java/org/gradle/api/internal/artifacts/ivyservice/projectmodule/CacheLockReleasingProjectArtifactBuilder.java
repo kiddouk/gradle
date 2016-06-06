@@ -16,6 +16,7 @@
 
 package org.gradle.api.internal.artifacts.ivyservice.projectmodule;
 
+import org.gradle.api.artifacts.component.ProjectComponentIdentifier;
 import org.gradle.api.internal.artifacts.ivyservice.CacheLockingManager;
 import org.gradle.internal.component.model.ComponentArtifactMetadata;
 
@@ -34,6 +35,16 @@ public class CacheLockReleasingProjectArtifactBuilder implements ProjectArtifact
             @Override
             public void run() {
                 delegate.build(artifact);
+            }
+        });
+    }
+
+    @Override
+    public void build(final ProjectComponentIdentifier project, final Iterable<String> taskNames) {
+        cacheLockingManager.longRunningOperation("Build " + project + taskNames, new Runnable() {
+            @Override
+            public void run() {
+                delegate.build(project, taskNames);
             }
         });
     }

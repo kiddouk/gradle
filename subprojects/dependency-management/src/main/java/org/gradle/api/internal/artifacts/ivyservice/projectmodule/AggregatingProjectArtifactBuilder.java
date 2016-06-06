@@ -16,6 +16,7 @@
 
 package org.gradle.api.internal.artifacts.ivyservice.projectmodule;
 
+import org.gradle.api.artifacts.component.ProjectComponentIdentifier;
 import org.gradle.internal.component.model.ComponentArtifactMetadata;
 
 import java.util.List;
@@ -31,6 +32,13 @@ public class AggregatingProjectArtifactBuilder implements ProjectArtifactBuilder
     public void build(final ComponentArtifactMetadata artifact) {
         for (ProjectArtifactBuilder delegate : delegates) {
             delegate.build(artifact);
+        }
+    }
+
+    @Override
+    public void build(ProjectComponentIdentifier project, Iterable<String> taskNames) {
+        for (ProjectArtifactBuilder delegate : delegates) {
+            delegate.build(project, taskNames);
         }
     }
 

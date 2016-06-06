@@ -19,6 +19,8 @@ package org.gradle.composite.internal;
 import org.gradle.StartParameter;
 import org.gradle.api.internal.artifacts.ivyservice.projectmodule.ProjectArtifactBuilder;
 import org.gradle.api.internal.composite.CompositeBuildContext;
+import org.gradle.api.internal.artifacts.ivyservice.projectmodule.CompositeTaskResolver;
+import org.gradle.api.internal.tasks.ConstructingTaskResolver;
 import org.gradle.initialization.GradleLauncherFactory;
 import org.gradle.initialization.IncludedBuildFactory;
 import org.gradle.internal.composite.CompositeContextBuilder;
@@ -29,6 +31,7 @@ import org.gradle.internal.service.scopes.PluginServiceRegistry;
 
 public class CompositeBuildServices implements PluginServiceRegistry {
     public void registerGlobalServices(ServiceRegistration registration) {
+        registration.addProvider(new CompositeBuildGlobalScopeServices());
     }
 
     public void registerBuildSessionServices(ServiceRegistration registration) {
@@ -42,6 +45,12 @@ public class CompositeBuildServices implements PluginServiceRegistry {
     }
 
     public void registerProjectServices(ServiceRegistration registration) {
+    }
+
+    private static class CompositeBuildGlobalScopeServices {
+        public ConstructingTaskResolver createResolver() {
+            return new CompositeTaskResolver();
+        }
     }
 
     public static class CompositeBuildSessionScopeServices {
