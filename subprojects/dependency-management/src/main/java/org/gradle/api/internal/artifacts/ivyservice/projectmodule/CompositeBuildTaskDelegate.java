@@ -41,7 +41,13 @@ public class CompositeBuildTaskDelegate extends DefaultTask {
         ProjectArtifactBuilder builder = getServices().get(ProjectArtifactBuilder.class);
         String[] split = delegateTo.split("::", 2);
         String buildName = split[0];
-        String taskToExecute = ":" + split[1];
+        String taskCommand = split[1];
+        String taskToExecute;
+        if (taskCommand.startsWith("**:")) {
+            taskToExecute = taskCommand.substring(3);
+        } else {
+            taskToExecute = ":" + taskCommand;
+        }
         ProjectComponentIdentifier id = DefaultProjectComponentIdentifier.newId(buildName + "::");
         builder.build(id, Collections.singleton(taskToExecute));
     }
